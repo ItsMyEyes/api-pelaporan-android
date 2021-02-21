@@ -25,11 +25,11 @@ $ npm install
 
 3. Pembuatan database
 
-dalam pembuatan database anda bebas apa saja anda bisa mengatur database config/config.json
+    dalam pembuatan database anda bebas apa saja anda bisa mengatur database config/config.json
 
 4. Menjalankan aplikasi
 
-ketika database sudah dibuat maka aplikasi akan otomatis membuat table sendiri dengan menjalan aplikasinya
+    ketika database sudah dibuat maka aplikasi akan otomatis membuat table sendiri dengan menjalan aplikasinya
 
 ```shell
 $ npm run serve
