@@ -12,6 +12,23 @@ exports.getAll = async (req,res)  => {
     res.status(200).json(itemAll);
 }
 
+exports.countAll = async (req,res) => {
+    const unsafetyAll = await db.unsafetys.findAll({
+        include: ['users','tindak_lanjut'],
+        orderBy: [ 'tanggal', 'ASC']
+    });
+    const kecelakaanAll = await db.kecelakaans.findAll({
+        include: ['users','tindak_lanjut'],
+        orderBy: [ 'tanggal', 'ASC']
+    });
+    const userAll = await db.users.findAll()
+    res.status(200).json({
+        unsafety: unsafetyAll.length,
+        kecelakaan: kecelakaanAll.length,
+        users: userAll.length
+    })
+}
+
 exports.index = async (req,res)  => {
     const uid = await getId.verifyToken(req);
     const itemAll = await db.unsafetys.findAll({

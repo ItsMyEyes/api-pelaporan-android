@@ -4,6 +4,7 @@ const UnsafeController = require('../controller/unsafe.controller')
 const authorized = require('../middleware/checkAuth')
 
 router.get('/', authorized.verifyToken, UnsafeController.index)
+router.get('/countAll', authorized.verifyToken, UnsafeController.countAll)
 router.get('/all', authorized.verifyToken, UnsafeController.getAll)
 router.post('/add', authorized.verifyToken,UnsafeController.create)
 router.get('/:id', authorized.verifyToken,UnsafeController.detail)
