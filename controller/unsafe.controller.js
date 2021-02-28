@@ -3,28 +3,36 @@ const tanggal = require('../helpers/tanggal')
 const imageTools = require('../helpers/foto')
 const getId = require('../helpers/getId')
 
+exports.getAll = async (req,res)  => {
+    const uid = await getId.verifyToken(req);
+    const itemAll = await db.unsafetys.findAll({
+        include: ['users','tindak_lanjut'],
+        orderBy: [ 'tanggal', 'ASC']
+    });
+    res.status(200).json(itemAll);
+}
+
 exports.index = async (req,res)  => {
     const uid = await getId.verifyToken(req);
     const itemAll = await db.unsafetys.findAll({
         where: {
-            id_pengawai: uid
+            pengawai_id: uid
         },
-        include: ['tindak_lanjut'],
+        include: ['users','tindak_lanjut'],
         orderBy: [ 'tanggal', 'ASC']
     });
     res.status(200).json(itemAll);
 }
 
 exports.create = async (req,res) => {
-    const { area, keterangan, foto, id_pengawai } = req.body;
-    if (area == '' || keterangan == '' || foto == '' || id_pengawai == '') {
+    const { area, keterangan, foto, pengawai_id } = req.body;
+    if (area == '' || keterangan == '' || foto == '' || pengawai_id == '') {
         return res.status(422).json({
             message: 'Required Field',
             code: '422'
         });
     }
-
-    req.body.foto = imageTools.convertFoto(foto, id_pengawai, 'unsafe')
+    req.body.foto = imageTools.convertFoto(foto, pengawai_id, 'unsafe')
     req.body.tanggal = tanggal.formatDate(tanggal.now())
     const success = await db.unsafetys.create(req.body)
     db.tindak_lanjuts.create({
@@ -34,15 +42,15 @@ exports.create = async (req,res) => {
 }
 
 exports.detail = async (req,res) => {
-    const detail = await db.unsafetys.findOne({ where: { id: req.params.id }, include: ['tindak_lanjut'] })
+    const detail = await db.unsafetys.findOne({ where: { id: req.params.id }, include: ['tindak_lanjut','users'] })
 
     return res.status(200).json(detail)
 }
 
 exports.update = async (req,res) => {
-    const { area, keterangan, foto, id_pengawai } = req.body;
+    const { area, keterangan, foto, pengawai_id } = req.body;
     const uid = await getId.verifyToken(req);
-    if (area == '' || keterangan == '' || id_pengawai == '') {
+    if (area == '' || keterangan == '' || pengawai_id == '') {
         return res.status(422).json({
             message: 'Required Field',
             code: '422'
@@ -57,14 +65,14 @@ exports.update = async (req,res) => {
         })
         req.body.foto = getting.foto
     } else {
-        req.body.foto = fotoConver.convertFoto(foto, id_pengawai, 'unsafe')
+        req.body.foto = fotoConver.convertFoto(foto, pengawai_id, 'unsafe')
     }
 
     req.body.tanggal = tanggal.formatDate(tanggal.now())
     const success = await db.unsafetys.update(req.body, {
         where: {
             id: req.params.id,
-            id_pengawai: uid
+            pengawai_id: uid
         }
     })
 
@@ -78,7 +86,7 @@ exports.delete = async (req,res) => {
     db.unsafetys.destroy({
         where: {
             id: req.params.id,
-            id_pengawai: uid
+            pengawai_id: uid
         }
     })
 

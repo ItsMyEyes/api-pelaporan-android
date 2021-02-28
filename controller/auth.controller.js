@@ -57,7 +57,7 @@ exports.registerUser = async (req,res)  => {
         'password': password_hash
     })
     .then((data) => { 
-        let accessToken = jwt.sign(JSON.stringify(data), process.env.ACCESS_TOKEN_SECRET);
+        let accessToken = jwt.sign(JSON.stringify(data), process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'});
         return res.status(201).json({
             'user': data,
             'token': accessToken,

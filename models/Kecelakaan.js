@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
               notNull: true
             }
         },
-        id_pengawai: {
+        pengawai_id: {
             allowNull: false,
-            type: DataTypes.UUID
+            type: DataTypes.STRING,
         },
         tanggal: {
             allowNull: false,
@@ -43,11 +43,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             type: DataTypes.STRING
         },
-        
     });
 
     Kecelakaan.associate = models => {
         Kecelakaan.hasOne(models.tindak_lanjuts)
+        Kecelakaan.belongsTo(models.users, { as: 'users', foreignKey: 'pengawai_id' })
     }
     
     return Kecelakaan;

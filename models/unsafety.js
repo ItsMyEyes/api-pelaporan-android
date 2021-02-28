@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
               notNull: true
             }
         },
-        id_pengawai: {
+        pengawai_id: {
             allowNull: false,
-            type: DataTypes.UUID
+            type: DataTypes.STRING,
         },
         tanggal: {
             allowNull: false,
@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Unsafety.associate = models => {
         Unsafety.hasOne(models.tindak_lanjuts)
+        Unsafety.belongsTo(models.users, { as: 'users', foreignKey: 'pengawai_id' })
     }
 
     return Unsafety;
