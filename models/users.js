@@ -31,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     });
     
     todo.associate = models => {
-      todo.hasOne(models.unsafetys, { as: 'unsafetys',foreignKey: 'id' })
-      todo.hasOne(models.kecelakaans, { as: 'kecelakaans',foreignKey: 'id' })
+      todo.hasOne(models.unsafetys, { as: 'unsafetys',foreignKey: 'pengawai_id' })
+      todo.hasOne(models.kecelakaans, { as: 'kecelakaans',foreignKey: 'pengawai_id' })
     }
 
     return todo;

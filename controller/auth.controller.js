@@ -15,27 +15,49 @@ exports.attemptLogin = async (req,res) => {
         });
     } 
 
-    const userOne = await db.users.findOne({
-        where: {
-            nomer_pegawai: nomer_pegawai,
-        }
-    }).then(data => { return (data) ? data.dataValues : '' })
+    var userOne = []
+    const typeData = req.header('from_where')
 
-    if (userOne) {
-        const checkingpassword = await bcrypt.compare(password, userOne.password)
-        if (checkingpassword) {
-            let payload = { uid: userOne.id }
-            let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'});
-            return res.status(201).json({
-                'user': userOne,
-                'token': accessToken,
-            }) 
+    if (typeData) {
+        if (typeData == 'Website') {
+            userOne = await db.users.findOne({
+                where: {
+                    nomer_pegawai: nomer_pegawai,
+                    unit_kerja: 'admin'
+                }
+            }).then(data => { return (data) ? data.dataValues : '' })   
+        } else if(typeData == 'Android/Apple') {
+            userOne = await db.users.findOne({
+                where: {
+                    nomer_pegawai: nomer_pegawai,
+                }
+            }).then(data => { return (data) ? data.dataValues : '' })   
         } else {
-            return res.status(403).json({'message': 'Wrong password or nomer pegawai','code': 403})
+            userOne = await db.users.findOne({
+                where: {
+                    nomer_pegawai: nomer_pegawai,
+                }
+            }).then(data => { return (data) ? data.dataValues : '' })   
         }
-    } else {
-        return res.status(403).json({'message': 'Forbiden Users please go away','code': 403})
+        if (userOne) {
+            const checkingpassword = await bcrypt.compare(password, userOne.password)
+            if (checkingpassword) {
+                let payload = { uid: userOne.id }
+                let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'});
+                return res.status(201).json({
+                    'user': userOne,
+                    'token': accessToken,
+                }) 
+            } else {
+                return res.status(403).json({'message': 'Wrong password or nomer pegawai','code': 403})
+            }
+        } else {
+            return res.status(403).json({'message': 'Forbiden Users please go away','code': 403})
+        }
     }
+    return res.status(403).json({'message': 'Forbiden Users please go away','code': 403})
+
+
 }
 
 exports.registerUser = async (req,res)  => {
@@ -57,10 +79,8 @@ exports.registerUser = async (req,res)  => {
         'password': password_hash
     })
     .then((data) => { 
-        let accessToken = jwt.sign(JSON.stringify(data), process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'});
         return res.status(201).json({
             'user': data,
-            'token': accessToken,
         }) 
     })
     .catch(err => {

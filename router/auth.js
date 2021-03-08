@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router();
 const AuthController = require('../controller/auth.controller')
 const authorized = require('../middleware/checkAuth')
+const UnsafeController = require('../controller/unsafe.controller')
 
 router.get('/',AuthController.index)
 router.post('/register',AuthController.registerUser)

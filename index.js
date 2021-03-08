@@ -13,7 +13,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: false, parameterLimit: 500
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization,from_where');
     res.setHeader('Access-Control-Allow-Credentials', true);
 
     next();

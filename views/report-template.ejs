@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        table {
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        </style>
+    </head>
+    <body>
+        <div style="width: 85%; margin: 0 7.5%;">
+            <div style="text-align: center; padding-left: 50px;">            
+                <h3>Report <%= name %></h5>
+                <table border="2" style="width: 100%;">
+                    <tr style="padding: 15px;">
+                        <th class="p-2" style="font-size: 12px">ID</th>
+                        <th class="p-2" style="font-size: 12px">Area</th>
+                        <th class="p-2" style="font-size: 12px">Keterangan</th>
+                        <th class="p-2" style="font-size: 12px">Type</th>
+                        <th class="p-2" style="font-size: 12px">Tanggal</th>
+                        <th class="p-2" style="font-size: 12px">Foto Sebelum</th>
+                        <th class="p-2" style="font-size: 12px">Keterangan Tindak lanjut</th>
+                        <th class="p-2" style="font-size: 12px">Foto Tindak Lanjut</th>
+                    </tr>
+                <% if (students.length > 0) { %>
+                    <% students.forEach(item => {%>
+                       <tr style="padding: 15px;">
+                           <td>unsafe-<%= item.type %>/<%= item.no_urut %>/<%= item.tanggal %></td>
+                           <td><%= item.area %></td>
+                           <td><%= item.keterangan %></td>
+                           <td><%=item.tanggal %></td>
+                           <td><%= item.type %></td>
+                           <td><img src="file:///<%= assetPath %>/<%= item.foto  %>" style="width: 30px;height: 30px" alt=""></td>
+                            <td>
+                                <%= item.tindak_lanjut.keterangan_tindak_lanjut %>
+                            </td>
+                            <td>
+                                <img src="file:///<%= assetPath %>/<%= item.tindak_lanjut.foto_tindak_lanjut  %>" alt="" style="width: 30px;height: 30px">
+                            </td>
+                        </tr>
+                    <%  });%>
+                <% }%>
+                </table>
+             </div>
+        </div>
+    </body>
+</html>

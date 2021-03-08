@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         pengawai_id: {
-            allowNull: false,
-            type: DataTypes.STRING,
+            allowNull: true,
+            type: DataTypes.UUID,
         },
         tanggal: {
             allowNull: false,
@@ -30,6 +30,26 @@ module.exports = (sequelize, DataTypes) => {
         foto: {
             allowNull: false,
             type: DataTypes.STRING
+        },
+        no_urut: {
+            allowNull: false,
+            type: DataTypes.INTEGER
+        },
+        npk_laporan_action: {
+            allowNull: true,
+            type: DataTypes.STRING
+        },
+        nama_laporan_action: {
+            allowNull: true,
+            type: DataTypes.STRING
+        },
+        type: {
+            allowNull: true,
+            type: DataTypes.STRING
+        },
+        no_urut: {
+            allowNull: false,
+            type: DataTypes.INTEGER
         },
     });
 

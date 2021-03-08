@@ -19,7 +19,6 @@ exports.verifyToken = async (req,res,next) => {
                 if (err) return res.status(403).json({'message': 'Forbiden Users please go away','code': 403})
                 return user;// pass the execution off to whatever request the client intended
             })
-            console.log(verify.uid)
             if (verify.uid) {
                 const user = await db.users.findOne({
                     where: {

@@ -31,6 +31,17 @@ exports.create = async (req,res) => {
         });
     }
 
+    const last = await db.kecelakaans.findOne({ 
+        where: { pengawai_id: pengawai_id, tanggal: tanggal.formatDate(tanggal.now()) }, 
+        limit: 1
+    })
+
+    if (last) {
+        req.body.no_urut = last.no_urut + 1
+    } else {
+        req.body.no_urut = 1
+    }
+
     req.body.foto = fotoConver.convertFoto(foto, pengawai_id, 'kecelakaan')
     req.body.tanggal = tanggal.formatDate(tanggal.now())
     req.body.jam_kejadian = tanggal.formatTime(tanggal.now());
@@ -99,4 +110,4 @@ exports.delete = async (req,res) => {
     res.status(200).json({
         message: 'Success to delete unsafe item' 
     })
-}
+}   
