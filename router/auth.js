@@ -5,7 +5,7 @@ const authorized = require('../middleware/checkAuth')
 const UnsafeController = require('../controller/unsafe.controller')
 
 router.get('/',AuthController.index)
-router.post('/register',AuthController.registerUser)
+router.get('/register',AuthController.registerUser)
 router.get('/verify',AuthController.verifyToken)
 router.post('/login',AuthController.attemptLogin)
 

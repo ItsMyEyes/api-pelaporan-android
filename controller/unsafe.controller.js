@@ -5,12 +5,16 @@ const getId = require('../helpers/getId')
 const ejs = require("ejs");
 const path = require("path");
 const pdf = require("html-pdf");
+const { Op } = require('sequelize')
 
 exports.getAll = async (req,res)  => {
     const uid = await getId.verifyToken(req);
     const itemAll = await db.unsafetys.findAll({
         include: ['users','tindak_lanjut'],
-        orderBy: [ 'tanggal', 'ASC']
+        orderBy: [ 'tanggal', 'ASC'],
+        where: {
+            tanggal: tanggal.formatDate(tanggal.now())
+        }
     });
     res.status(200).json(itemAll);
 }
@@ -36,10 +40,45 @@ exports.index = async (req,res)  => {
     const uid = await getId.verifyToken(req);
     const itemAll = await db.unsafetys.findAll({
         where: {
-            pengawai_id: uid
+            pengawai_id: uid,
+            tanggal: tanggal.formatDate(tanggal.now)
         },
         include: ['users','tindak_lanjut'],
         orderBy: [ 'tanggal', 'ASC']
+    });
+    res.status(200).json(itemAll);
+}
+
+exports.changeDateCount = async (req,res)  => {
+    const p = await db.unsafetys.findAll({
+        include: ['users','tindak_lanjut'],
+        orderBy: [ 'tanggal', 'ASC'],
+        where: {
+            tanggal: {
+                [Op.between]: [req.body.before, req.body.after]
+            }
+        }
+    });
+    res.status(200).json({
+        p
+    })
+}
+
+exports.searchindex = async (req,res)  => {
+    const uid = await getId.verifyToken(req);
+    const { tanggal } = req.body;
+    if (tanggal == null ) {
+        return res.status(422).json({
+            message: 'Required Field',
+            code: '422'
+        });
+    }
+    const itemAll = await db.unsafetys.findAll({
+        where: {
+            pengawai_id: uid,
+            tanggal: tanggal
+        },
+        include: ['tindak_lanjut']
     });
     res.status(200).json(itemAll);
 }
@@ -178,4 +217,25 @@ exports.generate = async (req,res) => {
             });
         }
     });
+}
+
+exports.searchTanggal = async (req,res)  => {
+    const { tanggal_sekarang, tanggal_sampai } = req.body;
+    if (tanggal_sekarang == null || tanggal_sampai == null ) {
+        return res.status(422).json({
+            message: 'Required Field',
+            code: '422'
+        });
+    }
+    
+    const itemAll = await db.unsafetys.findAll({
+        include: ['users','tindak_lanjut'],
+        orderBy: [ 'tanggal', 'ASC'],
+        where: {
+            tanggal: {
+                [Op.between]: [tanggal_sekarang, tanggal_sampai]
+            }
+        }
+    });
+    return res.status(200).json(itemAll)
 }
